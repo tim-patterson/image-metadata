@@ -11,7 +11,7 @@ fn main() {
     for path in matches.values_of_os("FILES").unwrap() {
         if let Err(error) = process_file(path) {
             eprintln!(
-                "While processing {}, we hit error {}",
+                "While processing {}, we hit an error:\n  {}",
                 path.to_string_lossy(),
                 error
             );
