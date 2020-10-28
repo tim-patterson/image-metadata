@@ -1,14 +1,14 @@
+use chrono::{DateTime, Utc};
 use std::path::Path;
-use std::time::SystemTime;
 
 /// Image metadata
 #[derive(Eq, PartialEq, Debug)]
 pub struct ImageMetadata {
     size: u64,
     /// Potentially missing if the underlying platform/filesystem doesn't capture the created time
-    created_time: Option<SystemTime>,
+    created_time: Option<DateTime<Utc>>,
     /// Potentially missing if the underlying platform/filesystem doesn't capture the modified time
-    modified_time: Option<SystemTime>,
+    modified_time: Option<DateTime<Utc>>,
 }
 
 /// Retrieves the filesystem metadata for a given file.
@@ -16,16 +16,15 @@ pub fn file_metadata<P: AsRef<Path>>(path: P) -> std::io::Result<ImageMetadata> 
     let metadata = std::fs::metadata(path)?;
     Ok(ImageMetadata {
         size: metadata.len(),
-        created_time: metadata.created().ok(),
-        modified_time: metadata.modified().ok(),
+        created_time: metadata.created().map(DateTime::from).ok(),
+        modified_time: metadata.modified().map(DateTime::from).ok(),
     })
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::io::ErrorKind;
-    use std::ops::Add;
+    use chrono::TimeZone;
 
     #[test]
     fn test_file_metadata() {
@@ -35,8 +34,8 @@ mod tests {
         let created_time = metadata.created_time.expect("Created time expected");
         let modified_time = metadata.created_time.expect("Modified time expected");
         // A system time representing the start of 2020
-        let t_2020 = SystemTime::UNIX_EPOCH.add(Duration::from_secs(1575072000));
-        let now = SystemTime::now();
+        let t_2020 = Utc.ymd(2020, 1, 1).and_hms(0, 0, 0);
+        let now = Utc::now();
         assert!(created_time > t_2020);
         assert!(created_time <= now);
         assert!(modified_time > t_2020);
