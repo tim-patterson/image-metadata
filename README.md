@@ -5,7 +5,7 @@ A command-line utility to extract image metadata from JPEG images
 
 ### TODO
 * [x] File metadata extraction
-* [ ] Json serialization and output
+* [x] Json serialization and output
 * [ ] Commandline parser and integration test
 * [ ] Image metadata extraction
 * [ ] Readme - howto etc
