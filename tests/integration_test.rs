@@ -31,7 +31,15 @@ fn test_cli_sad() {
     std::fs::create_dir_all("target/test").expect("Failed to create directory");
 
     let mut cmd = Command::cargo_bin("image-metadata").unwrap();
-    cmd.arg("file_that_doesnt_exist").assert().failure().stderr(
-        "While processing file_that_doesnt_exist, we hit an error:\n  No such file or directory (os error 2)\n",
-    );
+
+    // Slightly different OS errors between windows and osx/linux
+    if cfg!(windows) {
+        cmd.arg("file_that_doesnt_exist").assert().failure().stderr(
+            "While processing file_that_doesnt_exist, we hit an error:\n  The system cannot find the file specified. (os error 2)\n",
+        );
+    } else {
+        cmd.arg("file_that_doesnt_exist").assert().failure().stderr(
+            "While processing file_that_doesnt_exist, we hit an error:\n  No such file or directory (os error 2)\n",
+        );
+    }
 }
