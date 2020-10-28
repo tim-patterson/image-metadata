@@ -32,7 +32,6 @@ fn test_cli_sad() {
 
     let mut cmd = Command::cargo_bin("image-metadata").unwrap();
     cmd.arg("file_that_doesnt_exist").assert().failure().stderr(
-        r#"Error: Os { code: 2, kind: NotFound, message: "No such file or directory" }
-"#,
+        "While processing file_that_doesnt_exist, we hit error No such file or directory (os error 2)\n",
     );
 }
