@@ -33,16 +33,22 @@ struct FileMetadata {
     filename: String,
     size: u64,
     /// Potentially missing if the underlying platform/filesystem doesn't capture the created time
+    #[serde(skip_serializing_if = "Option::is_none")]
     created_time: Option<DateTime<Utc>>,
     /// Potentially missing if the underlying platform/filesystem doesn't capture the modified time
+    #[serde(skip_serializing_if = "Option::is_none")]
     modified_time: Option<DateTime<Utc>>,
 }
 
 #[derive(Eq, PartialEq, Debug, Serialize, Deserialize)]
 struct ImageMetadata {
+    #[serde(skip_serializing_if = "Option::is_none")]
     orientation: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     capture_time: Option<NaiveDateTime>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     camera_model: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     camera_serial: Option<String>,
 }
 
@@ -207,10 +213,8 @@ mod tests {
           "filename": "test.jpg",
           "size": 123456,
           "created_time": "1986-04-27T07:30:00Z",
-          "modified_time": null,
           "orientation": 1,
           "capture_time": "1986-04-27T07:30:00",
-          "camera_model": null,
           "camera_serial": "baz"
         }"#}
         );
