@@ -20,6 +20,7 @@ pub fn process_file<P: AsRef<Path>>(path: P) -> Result<(), ImageError> {
     Ok(())
 }
 
+/// All the metadata about a file/image
 #[derive(Eq, PartialEq, Debug, Serialize, Deserialize)]
 struct CombinedMetadata {
     #[serde(flatten)]
@@ -28,6 +29,7 @@ struct CombinedMetadata {
     image_metadata: ImageMetadata,
 }
 
+/// The file specific metadata
 #[derive(Eq, PartialEq, Debug, Serialize, Deserialize)]
 struct FileMetadata {
     filename: String,
@@ -40,6 +42,7 @@ struct FileMetadata {
     modified_time: Option<DateTime<Utc>>,
 }
 
+/// The metadata from the actual image itself
 #[derive(Eq, PartialEq, Debug, Serialize, Deserialize)]
 struct ImageMetadata {
     #[serde(skip_serializing_if = "Option::is_none")]
